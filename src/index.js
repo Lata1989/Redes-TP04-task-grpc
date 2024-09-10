@@ -1,13 +1,15 @@
 import grpc from '@grpc/grpc-js';
 import protoLoader from '@grpc/proto-loader';
-import { GetTaskStats } from './services/taskGrpcService.js';
-import { dirname } from 'path';
+import path from 'path';
 import { fileURLToPath } from 'url';
+import { GetTaskStats } from './services/taskGrpcService.js';
 
+// Obtener el directorio actual del archivo
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __dirname = path.dirname(__filename);
 
-const PROTO_PATH = `${__dirname}/../tasks.proto`;
+// Construir la ruta al archivo .proto
+const PROTO_PATH = path.join(__dirname, '..', 'tasks.proto');
 
 const packageDefinition = protoLoader.loadSync(PROTO_PATH);
 const taskProto = grpc.loadPackageDefinition(packageDefinition).tasks;
