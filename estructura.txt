@@ -1,0 +1,10 @@
+task-grpc/
+├── src/
+│   ├── services/
+│   │   └── taskGrpcService.js  # Lógica del servicio gRPC
+│   ├── config/
+│   │   └── dbConfig.js         # Configuración de la conexión a la base de datos
+│   ├── index.js                # Punto de entrada del servidor gRPC
+├── tasks.proto                 # Definición del servicio y los mensajes gRPC
+├── package.json                # Dependencias del subproyecto
+└── .env                        # Variables de entorno (MongoDB URI, etc.)
