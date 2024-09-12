@@ -1,22 +1,23 @@
-import { MongoClient } from 'mongodb';
-import dotenv from 'dotenv';
+import { getDB } from '../config/dbConfig.js';
 
-dotenv.config();
-const uri = process.env.MONGO_URI;
-const dbName = process.env.DB_NAME;
+export async function GetTaskStats(call, callback) {
+  try {
+    const db = getDB();
+    const collectionName = process.env.COLLECTION; // Usa la variable de entorno para el nombre de la colección
 
-let db;
+    // Contar todas las tareas
+    const totalCount = await db.collection(collectionName).countDocuments({});
+    
+    // Contar las tareas completadas
+    const completedCount = await db.collection(collectionName).countDocuments({ estado: 'Completado' });
 
-// Conexión a MongoDB
-MongoClient.connect(uri, (err, client) => {
-  if (err) throw err;
-  console.log('Conectado a MongoDB');
-  db = client.db(dbName);
-});
-
-export function GetTaskStats(call, callback) {
-  db.collection('tasks').countDocuments({}, (err, count) => {
-    if (err) return callback(err, null);
-    callback(null, { total_tasks: count });
-  });
+    console.log('Total de tareas encontradas:', totalCount); // Log para depuración
+    console.log('Total de tareas completadas:', completedCount); // Log para depuración
+    
+    // Enviar respuesta al cliente con ambos conteos
+    callback(null, { Total: totalCount, Completas: completedCount });
+  } catch (err) {
+    console.error('Error al obtener el conteo de tareas:', err);
+    callback(err, null);
+  }
 }
